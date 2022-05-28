@@ -1,13 +1,21 @@
 import express from 'express';
+import { Decoder } from './decoder';
+import { Classifier } from './classifier';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+const classifier = new Classifier();
+const decoder = new Decoder(
+  'https://mainnet.infura.io/v3/cc568b58f6f44bb1a827f6d6de016654',
+  classifier
+);
 app.get('/decoder/:txhash', async (req, res) => {
-	const signedTx = req.params.txhash;
-	console.log('##########TX DECODING REQ RECEIVED############');
-	// call decoder class here
-	console.log('###########TX SUCCESSFULLY DECODED############');
-	res.json({signedTx: signedTx}).status(200);
+  const txHash = req.params.txhash;
+  console.log('##########TX DECODING REQ RECEIVED############');
+  // call decoder class here
+  const tx = await decoder.decode(txHash);
+  console.log('###########TX SUCCESSFULLY DECODED############');
+  res.json({ signedTx: tx }).status(200);
 });
 app.listen(3030, () => console.log(`Listening on port 3030`));
