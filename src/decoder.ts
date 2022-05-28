@@ -20,9 +20,12 @@ export class Decoder {
 		//let classifier decide the path
 		const path = await this.classifier.classify(tx);
 		if(!path) {
-			return 'Could not identify transaction';
+			return 'Err[1]: Could not identify transaction';
 		}
 		const readableString = this.beautifier.beautify(tx, path);
+		if(!readableString) {
+			return 'Err[2]: Could not identify transaction';
+		}
 		return readableString;
 	}
 

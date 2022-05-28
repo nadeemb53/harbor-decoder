@@ -20,6 +20,6 @@ app.get('/decoder/:txhash', async (req, res) => {
   // call decoder class here
   const tx = await decoder.decode(txHash);
   console.log('###########TX SUCCESSFULLY DECODED############');
-  res.json({ signedTx: tx }).status(200);
+  res.json({ response: tx }).status(200);
 });
 app.listen(3030, () => console.log(`Listening on port 3030`));
