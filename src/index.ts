@@ -1,15 +1,19 @@
 import express from 'express';
 import { Decoder } from './decoder';
 import { Classifier } from './classifier';
+import { Beautifier } from './beautifier';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const classifier = new Classifier();
+const beautifier = new Beautifier();
 const decoder = new Decoder(
   'https://mainnet.infura.io/v3/cc568b58f6f44bb1a827f6d6de016654',
-  classifier
+  classifier,
+  beautifier,
 );
+
 app.get('/decoder/:txhash', async (req, res) => {
   const txHash = req.params.txhash;
   console.log('##########TX DECODING REQ RECEIVED############');
