@@ -17,12 +17,14 @@ export class Decoder {
 	async decode(txHash: string){
 		//fetch transaction
 		const tx = await this.fetchTransaction(txHash);
+		const txReceipt = await this.fetchTransactionReceipt(txHash);
 		//let classifier decide the path
-		const path = await this.classifier.classify(tx);
+		// console.log(tx);
+		const path = await this.classifier.classify(tx, txReceipt);
 		if(!path) {
 			return 'Err[1]: Could not identify transaction';
 		}
-		const readableString = this.beautifier.beautify(tx, path);
+		const readableString = this.beautifier.beautify(tx, path, this.provider);
 		if(!readableString) {
 			return 'Err[2]: Could not identify transaction';
 		}
@@ -31,6 +33,10 @@ export class Decoder {
 
 	private async fetchTransaction (txHash: string) {
 		return this.provider.getTransaction(txHash);
+	}
+
+	private async fetchTransactionReceipt(txHash: string) {
+		return this.provider.getTransactionReceipt(txHash);
 	}
 
 }
